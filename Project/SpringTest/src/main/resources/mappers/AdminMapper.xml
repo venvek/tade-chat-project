@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zerock.test.mapper.AdminMapper">
+	<select id="selectAll" resultType="com.zerock.test.dto.AdminTestDTO">
+        SELECT TEST_IDX, TEST_TEXT FROM TEST
+    </select>
+    <select id = "Get_ServerInfo"  parameterType = "int"
+    		resultType ="com.zerock.test.dto.ServerInfoDTO">
+    <![CDATA[
+    	SELECT *
+			FROM (
+			    SELECT *
+			    FROM SERVERLOG
+			    WHERE TO_DATE(SERVER_DATE || ' ' || SERVER_TIME, 'YYYY-MM-DD HH24:MI:SS') 
+			    < FROM_TZ(CAST(SYSDATE AS TIMESTAMP), 'UTC') AT TIME ZONE 'Asia/Seoul'
+			    ORDER BY SERVER_DATE DESC, SERVER_TIME DESC
+			)
+			WHERE ROWNUM <= #{cnt}
+			ORDER BY SERVER_DATE ASC, SERVER_TIME ASC
+	]]>
+    </select>
+    <select id = "get_imgseqCurr" resultType = "int">
+    	SELECT img_seq.NEXTVAL AS img_seq  FROM DUAL
+    </select>
+    
+    <insert id="saveImgName" parameterType = "String">
+    	INSERT INTO IMGNAMESAVE VALUES
+		(
+			#{filePath}
+		)    
+    </insert>
+    
+    <select id = "getImgNameList" resultType = "String">
+    	select * from IMGNAMESAVE
+    </select>
+    
+    <select id="GetUserList" resultType="com.zerock.test.dto.UserDTO">
+        	SELECT * FROM USERINFO
+    </select>
+    
+    <update id="UpdateUserInfo_Admin" parameterType="com.zerock.test.dto.UserDTO">
+    	UPDATE USERINFO SET 
+		NAME = #{name}, 
+		email = #{email},
+		gender = #{gender},
+		expJibunAddr = #{expJibunAddr},
+		detail_address = #{detail_address},
+		birthDate = #{brithString},
+		is_admin = #{is_admin}
+		WHERE id = #{id}
+    </update>
+    
+    <delete id="DeleteUserInfo_Admin" parameterType="com.zerock.test.dto.UserDTO">
+    	DELETE FROM USERINFO 
+		WHERE id = #{id}
+    </delete>
+    <insert id="CreateProduct" parameterType="com.zerock.test.dto.ProductDTO">
+    	INSERT INTO products (
+            shop_id,
+            idx,
+            PRODUCTS_SELLER,
+            products_name,
+            products_category,
+            products_status,
+            products_details,
+            products_price,
+            products_location,
+            products_img1,
+            products_img2,
+            products_img3,
+            created_at
+        ) VALUES
+        (
+       		(SELECT SHOP_ID FROM shop WHERE SHOP.SHOP_OWNER  = #{products_seller}),
+       		products_seq.nextval,
+       		#{products_seller},
+       		#{products_name},
+       		(SELECT CATEGORY_NAME FROM CATEGORY WHERE CATEGORY_NAME = #{products_category}),
+       		#{products_status},
+       		#{products_details},
+       		#{products_price},
+			#{products_location},
+			#{products_img1},
+			#{products_img2},
+			#{products_img3},
+			SYSDATE
+        )
+    </insert>
+    
+    <insert id="ServerLogUpdate2" parameterType="com.zerock.test.dto.ServerInfoDTO">
+    	INSERT INTO SERVERLOG VALUES
+			(
+				#{server_date},
+				#{server_time},
+				#{proces_ProcessCnt},				
+				#{proces_IOwait},				
+				#{memory_swpd},
+				#{memory_free},
+				#{memory_buffer},
+				#{memory_cache},				
+				#{swap_si},
+				#{swap_so},
+				#{io_bi},
+				#{io_bo},
+				#{system_in},
+				#{system_cs},
+				#{cpu_us},
+				#{cpu_sy},
+				#{cpu_id},
+				#{cpu_wa},
+				#{cpu_st}
+			)
+    </insert>
+   <update id="ServerLogUpdate" parameterType="list">
+   BEGIN
+        <foreach collection="list" item="item" index="idx" separator="">
+         MERGE INTO SERVERLOG trg
+            USING (
+                SELECT #{item.server_date} AS SERVER_DATE, #{item.server_time} AS SERVER_TIME FROM DUAL
+            ) src
+            ON (trg.SERVER_DATE = src.SERVER_DATE AND trg.SERVER_TIME = src.SERVER_TIME)
+            WHEN NOT MATCHED THEN
+            	INSERT VALUES
+            	(
+					#{item.server_date},
+					#{item.server_time},
+					#{item.proces_ProcessCnt},				
+					#{item.proces_IOwait},				
+					#{item.memory_swpd},
+					#{item.memory_free},
+					#{item.memory_buffer},
+					#{item.memory_cache},				
+					#{item.swap_si},
+					#{item.swap_so},
+					#{item.io_bi},
+					#{item.io_bo},
+					#{item.system_in},
+					#{item.system_cs},
+					#{item.cpu_us},
+					#{item.cpu_sy},
+					#{item.cpu_id},
+					#{item.cpu_wa},
+					#{item.cpu_st}
+				);
+	    </foreach>
+	    END;
+	</update>
+	
+</mapper>

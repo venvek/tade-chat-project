@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zerock.test.mapper.ProductMapper">
+
+	<select id="AllProducts" parameterType="Integer" resultType="com.zerock.test.dto.ProductDTO">
+	 SELECT * 
+	FROM (
+    SELECT P.*, ROW_NUMBER() OVER (ORDER BY P.IDX DESC) AS RNUM
+    FROM PRODUCTS P
+	)
+	WHERE RNUM <![CDATA[<=]]> #{size}
+    
+	</select>
+	<select id="selectProduct" parameterType="Integer" resultType="com.zerock.test.dto.ProductDTO">
+			                 SELECT * 
+	FROM (
+    SELECT P.*, ROW_NUMBER() OVER (ORDER BY P.IDX DESC) AS RNUM
+    FROM PRODUCTS P
+    WHERE P.SHOP_ID = #{shop_id}
+	)
+	WHERE RNUM <![CDATA[<=]]> #{size}
+    
+	</select>
+	<select id="sortCnt"  parameterType="map" resultType="Integer">
+	SELECT COUNT(*) 
+    FROM products
+    WHERE shop_id = #{shop_id}
+    AND products_status = #{status}
+	</select>
+	
+	<select id="AllProductsCnt" resultType="Integer">
+	SELECT COUNT(*) 
+    FROM products
+	</select>
+	
+	<select id="countProductsByShopId" parameterType="Integer" resultType="Integer">
+    SELECT COUNT(*) 
+    FROM products
+    WHERE shop_id = #{shop_id}
+</select>
+	<select id="completedcnt" parameterType="Integer" resultType="Integer">
+	SELECT COUNT(*) 
+	FROM PRODUCTS
+	WHERE PRODUCTS_STATUS = '거래완료'
+	AND shop_id = #{shop_id}
+	</select>
+	
+	<select id="saleCnt" parameterType="Integer" resultType="Integer">
+	SELECT COUNT(*) 
+	FROM PRODUCTS
+	WHERE PRODUCTS_STATUS = '판매중'
+	AND shop_id = #{shop_id}
+	</select>
+	
+	<select id="progressCnt" parameterType="Integer" resultType="Integer">
+	SELECT COUNT(*) 
+	FROM PRODUCTS
+	WHERE PRODUCTS_STATUS = '거래중'
+	AND shop_id = #{shop_id}
+	</select>
+	<select id="selectLowPrice" parameterType="Integer" resultType="com.zerock.test.dto.ProductDTO">
+			                 SELECT * 
+	FROM (
+    SELECT P.*, ROW_NUMBER() OVER (ORDER BY P.products_price ASC) AS RNUM
+    FROM PRODUCTS P
+    WHERE P.SHOP_ID = #{shop_id}
+	)
+	WHERE RNUM <![CDATA[<=]]> #{size}
+	</select>
+	
+	<select id="selectHighPrice" parameterType="Integer" resultType="com.zerock.test.dto.ProductDTO">
+		                 SELECT * 
+	FROM (
+    SELECT P.*, ROW_NUMBER() OVER (ORDER BY P.products_price DESC) AS RNUM
+    FROM PRODUCTS P
+    WHERE P.SHOP_ID = #{shop_id}
+	)
+	WHERE RNUM <![CDATA[<=]]> #{size}
+	</select>
+	
+	<select id="selectNewst" parameterType="Integer" resultType="com.zerock.test.dto.ProductDTO">
+	                 SELECT * 
+	FROM (
+    SELECT P.*, ROW_NUMBER() OVER (ORDER BY P.CREATED_AT DESC) AS RNUM
+    FROM PRODUCTS P
+    WHERE P.SHOP_ID = #{shop_id}
+	)
+	WHERE RNUM <![CDATA[<=]]> #{size}
+	
+	</select>
+	
+	<select id="selectpopularity" parameterType="Integer" resultType="com.zerock.test.dto.ProductDTO">
+ 	              SELECT * 
+	FROM (
+    SELECT P.*, ROW_NUMBER() OVER (ORDER BY P.LIKE_COUNT DESC) AS RNUM
+    FROM PRODUCTS P
+    WHERE P.SHOP_ID = #{shop_id}
+	)
+	WHERE RNUM <![CDATA[<=]]> #{size}
+	</select>
+	
+	<select id="completed" parameterType="Integer" resultType="com.zerock.test.dto.ProductDTO">
+	                 SELECT * 
+	FROM (
+    SELECT P.*, ROW_NUMBER() OVER (ORDER BY P.IDX DESC) AS RNUM
+    FROM PRODUCTS P
+    WHERE P.SHOP_ID = #{shop_id}
+     AND P.PRODUCTS_STATUS = '거래완료'
+	)
+	WHERE RNUM <![CDATA[<=]]> #{size}
+		
+	</select>
+	
+	<select id="selectAllPriceAsc" parameterType="Integer" resultType="com.zerock.test.dto.ProductDTO">
+		                 SELECT * 
+	FROM (
+    SELECT P.*, ROW_NUMBER() OVER (ORDER BY P.PRODUCTS_PRICE ASC) AS RNUM
+    FROM PRODUCTS P
+    WHERE P.SHOP_ID = #{shop_id}
+
+	)
+	WHERE RNUM <![CDATA[<=]]> #{size}
+	</select>
+		<select id="selectCompletedPriceAsc" parameterType="Integer" resultType="com.zerock.test.dto.ProductDTO">
+		                 SELECT * 
+	FROM (
+    SELECT P.*, ROW_NUMBER() OVER (ORDER BY P.PRODUCTS_PRICE ASC) AS RNUM
+    FROM PRODUCTS P
+    WHERE P.SHOP_ID = #{shop_id}
+	AND P.PRODUCTS_STATUS = '거래완료'
+	)
+	WHERE RNUM <![CDATA[<=]]> #{size}
+	</select>
+	
+			<select id="selectSalePriceAsc" parameterType="Integer" resultType="com.zerock.test.dto.ProductDTO">
+		                 SELECT * 
+	FROM (
+    SELECT P.*, ROW_NUMBER() OVER (ORDER BY P.PRODUCTS_PRICE ASC) AS RNUM
+    FROM PRODUCTS P
+    WHERE P.SHOP_ID = #{shop_id}
+	AND P.PRODUCTS_STATUS = '판매중'
+	)
+	WHERE RNUM <![CDATA[<=]]> #{size}
+	</select>
+	
+			<select id="selectProgressPriceAsc" parameterType="Integer" resultType="com.zerock.test.dto.ProductDTO">
+		                 SELECT * 
+	FROM (
+    SELECT P.*, ROW_NUMBER() OVER (ORDER BY P.PRODUCTS_PRICE ASC) AS RNUM
+    FROM PRODUCTS P
+    WHERE P.SHOP_ID = #{shop_id}
+	AND P.PRODUCTS_STATUS = '거래중'
+	)
+	WHERE RNUM <![CDATA[<=]]> #{size}
+	</select>
+	
+	<select id="selectPro" resultType="com.zerock.test.dto.ProductDTO">
+            SELECT * FROM products p JOIN shop s ON s.shop_id= p.SHOP_ID WHERE idx =#{idx}
+        </select>
+        
+     			<select id="selectdescProducts" parameterType="map" resultType="com.zerock.test.dto.ProductDTO">
+		                 SELECT * 
+	FROM (
+    SELECT P.*, ROW_NUMBER() OVER (ORDER BY P.PRODUCTS_PRICE DESC) AS RNUM
+    FROM PRODUCTS P
+    WHERE P.SHOP_ID = #{shop_id}
+	AND P.PRODUCTS_STATUS = #{status}
+	)
+	WHERE RNUM <![CDATA[<=]]> #{size}
+	</select>
+	
+	     			<select id="selectdescAllProducts" parameterType="Integer" resultType="com.zerock.test.dto.ProductDTO">
+		                 SELECT * 
+	FROM (
+    SELECT P.*, ROW_NUMBER() OVER (ORDER BY P.PRODUCTS_PRICE DESC) AS RNUM
+    FROM PRODUCTS P
+    WHERE P.SHOP_ID = #{shop_id}
+	)
+	WHERE RNUM <![CDATA[<=]]> #{size}
+	</select>
+	
+	<select id="selectnewestProducts" parameterType="map" resultType="com.zerock.test.dto.ProductDTO">
+		                 SELECT * 
+	FROM (
+    SELECT P.*, ROW_NUMBER() OVER (ORDER BY  P.CREATED_AT DESC) AS RNUM
+    FROM PRODUCTS P
+    WHERE P.SHOP_ID = #{shop_id}
+    AND P.PRODUCTS_STATUS = #{status}
+	)
+	WHERE RNUM <![CDATA[<=]]> #{size}
+	</select>
+	
+	<select id="selectpopularityProducts" parameterType="map" resultType="com.zerock.test.dto.ProductDTO">
+		                 SELECT * 
+	FROM (
+    SELECT P.*, ROW_NUMBER() OVER (ORDER BY P.LIKE_COUNT DESC) AS RNUM
+    FROM PRODUCTS P
+    WHERE P.SHOP_ID = #{shop_id}
+    AND P.PRODUCTS_STATUS = #{status}
+	)
+	WHERE RNUM <![CDATA[<=]]> #{size}
+	</select>
+	
+		     			<select id="statusProducts" parameterType="map" resultType="com.zerock.test.dto.ProductDTO">
+		                 SELECT * 
+	FROM (
+    SELECT P.*, ROW_NUMBER() OVER (ORDER BY P.PRODUCTS_PRICE DESC) AS RNUM
+    FROM PRODUCTS P
+    WHERE P.SHOP_ID = #{shop_id}
+    AND P.PRODUCTS_STATUS = #{status}
+	)
+	WHERE RNUM <![CDATA[<=]]> #{size}
+	</select>
+	
+	<select id="selectOne" parameterType="int" resultType="com.zerock.test.dto.ProductDTO">
+            SELECT * FROM products p WHERE idx =#{idx}
+        </select>
+	
+	<update id="updateproduct" parameterType="int">
+	UPDATE products SET PRODUCTS_status ='거래완료' WHERE idx = #{product_idx}
+	</update>
+    <delete id="deleteproduct" parameterType="int">
+    DELETE from products WHERE idx=#{idx}
+    </delete>   
+</mapper>
