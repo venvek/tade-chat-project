@@ -1,7 +1,7 @@
 사용자간 제품 판매 플랫폼 프로젝트입니다.
 ![image](https://github.com/user-attachments/assets/81a1cd45-e816-4d27-8c3a-ce3c3a119186)
 
-#프로젝트소개
+# 프로젝트소개
 
 개발기간 : 2024.08.07 ~ 09.03
 
