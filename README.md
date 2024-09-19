@@ -10,9 +10,10 @@
 개발환경 : Spring Tool Suite 4 • Oracle Database 23ai (23.4.0.24.05) ojdbc 11c • Java SE 17 • Apache Tomcat® 10.1 • JQuery • DBeaver 23.2.2.2 • Spring Security • WebSocket • Stomp • Sockjs • axios  
 참고사이트 : 당근마켓, 번개장터    
     
-# 페이지 소개  
-![image](https://github.com/user-attachments/assets/2187f282-2f2b-4cfb-aabc-5f515b58ddb3)  
-  
+# 기능 구조
+![image](https://github.com/user-attachments/assets/767a0a53-f358-4fb6-8042-4c3510346a7b)
+
+# 주요 기능  
 ![image](https://github.com/user-attachments/assets/5275b289-7d62-452f-b02d-22d4b82d8640)
 
 # 시연 영상   
