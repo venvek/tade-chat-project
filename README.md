@@ -16,6 +16,9 @@
 # 주요 기능  
 ![image](https://github.com/user-attachments/assets/5275b289-7d62-452f-b02d-22d4b82d8640)
 
+# 프로젝트 설명
+자세한 내용은 ppt를  [여기에서 PDF 파일](Project/파이널최종수정본.pdf)통해서 확인해주세요
+
 # 시연 영상   
 https://www.youtube.com/watch?v=9sDuoMcewHI  
 
